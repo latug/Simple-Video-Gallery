@@ -33,7 +33,7 @@ module.exports = function(app)
   });
 
   //get the title back and go through and get the Seasons. If none are found pass to next handler
-  app.get('/listSeasons/:show', function(req, res){
+  app.get('/listSeasons/:show', function(req, res, next){
     show = req.params.show;
     var files = fs.readdirSync('./videos/' + show);
       files.forEach(function(file){
@@ -43,6 +43,10 @@ module.exports = function(app)
             seasons.push(file);
           }
       });
+    if(seasons.length === 0)
+    {
+      next();
+    }
     res.send({
       'show': show,
       'seasons': seasons
@@ -50,5 +54,13 @@ module.exports = function(app)
     //clear out data
     show = '';
     seasons = [];
+  });
+
+  app.get('/listSeasons/:show', function(req, res){
+    res.send('coming soon!');
+  });
+
+  app.get('/listEpisodes/:show/:seasons', function(req, res){
+    res.send('coming soon!');
   });
 };
