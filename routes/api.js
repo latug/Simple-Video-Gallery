@@ -32,7 +32,7 @@ module.exports = function(app)
     vidRow = {};
   });
 
-  //get the title back and go through and get the Seasons or videos.
+  //get the title back and go through and get the Seasons. If none are found pass to next handler
   app.get('/listSeasons/:show', function(req, res){
     show = req.params.show;
     var files = fs.readdirSync('./videos/' + show);
