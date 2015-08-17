@@ -66,7 +66,6 @@ module.exports = function(app)
       var stats = fs.statSync('./videos/' + show + '/' + file);
       if(stats.isFile() && file != 'image.png')
       {
-        file = file.substr(0, file.lastIndexOf('.'));
         vids.push(file);
       }
     });
@@ -80,7 +79,26 @@ module.exports = function(app)
     vids = [];
   });
 
+  // If there were seasons then pass that in and get all the episodes in that season
   app.get('/listEpisodes/:show/:season', function(req, res){
-    res.send('coming soon!');
+    show = req.params.show;
+    season = req.params.season;
+    var files = fs.readdirSync('./videos/' + show + '/' + season);
+    files.forEach(function(file){
+      var stats = fs.statSync('./videos/' + show + '/' + season + '/' + file);
+      if(stats.isFile())
+      {
+        vids.push(file);
+      }
+    });
+    res.send({
+      "show": show,
+      "season": season,
+      "vids": vids
+    });
+    //clear out data
+    show = '';
+    season = '';
+    vids = [];
   });
 };
