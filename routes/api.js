@@ -15,7 +15,7 @@ module.exports = function(app)
   // List out videos based on directory and grab icon.
   app.get('/listGallery', function(req, res){
     var files = fs.readdirSync('./videos/');
-      files.forEach(function(file){
+    files.forEach(function(file){
         var stats = fs.statSync('./videos/' + file);
           if(stats.isDirectory())
           {
@@ -27,7 +27,7 @@ module.exports = function(app)
           }
       });
     res.send(vidTbl);
-    // clear out old data
+    // clear out data
     vidTbl = [];
     vidRow = {};
   });
@@ -36,7 +36,7 @@ module.exports = function(app)
   app.get('/listSeasons/:show', function(req, res, next){
     show = req.params.show;
     var files = fs.readdirSync('./videos/' + show);
-      files.forEach(function(file){
+    files.forEach(function(file){
         var stats =  fs.statSync('./videos/' + show + '/' + file);
           if(stats.isDirectory())
           {
@@ -47,20 +47,40 @@ module.exports = function(app)
     {
       next();
     }
-    res.send({
-      'show': show,
-      'seasons': seasons
-    });
+    else
+    {
+      res.send({
+        'show': show,
+        'seasons': seasons
+      });
+    }
     //clear out data
     show = '';
     seasons = [];
   });
 
   app.get('/listSeasons/:show', function(req, res){
-    res.send('coming soon!');
+    show = req.params.show;
+    var files = fs.readdirSync('./videos/' + show);
+    files.forEach(function(file){
+      var stats = fs.statSync('./videos/' + show + '/' + file);
+      if(stats.isFile() && file != 'image.png')
+      {
+        file = file.substr(0, file.lastIndexOf('.'));
+        vids.push(file);
+      }
+    });
+    res.send({
+      "show": show,
+      "seasons": [],
+      "vids": vids
+    });
+    //clear out data
+    show = '';
+    vids = [];
   });
 
-  app.get('/listEpisodes/:show/:seasons', function(req, res){
+  app.get('/listEpisodes/:show/:season', function(req, res){
     res.send('coming soon!');
   });
 };
