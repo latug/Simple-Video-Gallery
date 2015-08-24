@@ -20,8 +20,7 @@ module.exports = function(app)
           if(stats.isDirectory())
           {
             vidRow = {
-              'title': file,
-              'imgSrc': '../videos/' + file + '/image.png'
+              'title': file
             };
             vidTbl.push(vidRow);
           }
@@ -51,7 +50,8 @@ module.exports = function(app)
     {
       res.send({
         'show': show,
-        'seasons': seasons
+        'seasons': seasons,
+        'vids': []
       });
     }
     //clear out data
@@ -66,7 +66,7 @@ module.exports = function(app)
       var stats = fs.statSync('./videos/' + show + '/' + file);
       if(stats.isFile() && file != 'image.png')
       {
-        vids.push(file);
+        vids.push('../videos/' + show + '/' + file);
       }
     });
     res.send({

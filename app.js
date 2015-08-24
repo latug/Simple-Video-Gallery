@@ -18,7 +18,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/videos', express.static('videos')); //add static path so frontend can find files.
 
+//call in api routes module and pass in the app.
 require('./routes/api.js')(app);
 
 // catch 404 and forward to error handler
