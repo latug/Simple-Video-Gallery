@@ -1,5 +1,6 @@
 var vidGal = angular.module('vidGal', ['ngRoute']);
 
+// Configure router.
 vidGal.config(function($routeProvider){
   $routeProvider
     .when('/gallery',{
@@ -15,6 +16,7 @@ vidGal.config(function($routeProvider){
     });
 });
 
+// Setup calls to the back end.
 vidGal.factory('api',['$http', function($http){
 
   var api = {};
@@ -28,15 +30,22 @@ vidGal.factory('api',['$http', function($http){
     return $http.get('/listSeasons/' + show);
   };
 
+  api.listEpisodes = function(show, season)
+  {
+    return $http.get('/listEpisodes/' + show + '/' + season);
+  };
+
   return api;
 }]);
 
+// Controller for the gallery page
 vidGal.controller('galleryCtrl', ['$scope', 'api', function($scope, api){
   api.listGallery().then(function(res){
     $scope.shows = res.data;
   });
 }]);
 
+// Controller for the video page.
 vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope, api, $routeParams){
   var videos = [];
   var vid = '';
@@ -100,6 +109,36 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
     }
 
     drawPlayer(videos, pos);
+  };
+
+  $scope.selectedSeason = function($event)
+  {
+    $scope.showSeason = angular.element($event.currentTarget).attr('id');
+    api.listEpisodes(
+                      $routeParams.show,
+                      angular.element($event.currentTarget).attr('id')
+                    )
+    .then(function(res){
+        if($routeParams.show == res.data.show && angular.element($event.currentTarget).attr('id') == res.data.season)
+        {
+            videos = res.data.vids;
+            pos = 0;
+            if(videos.length >= 2)
+            {
+              $scope.showNxtPrev = true;
+            }
+
+            if(angular.element('#screen').html() !== "")
+            {
+              destroyPlayer();
+              drawPlayer(videos, pos);
+            }
+            else
+            {
+              drawPlayer(videos, pos);
+            }
+        }
+    });
   };
 
 }]);
