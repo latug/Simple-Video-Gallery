@@ -6,7 +6,7 @@
         <li class="dropdown">
           <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Seasons <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
-            <li ng-repeat="season in seasons"><a style="cursor: pointer;">{{season}}</a></li>
+            <li ng-repeat="season in seasons"><a style="cursor: pointer;" id="{{season}}" class="selectedSeason">{{season}}</a></li>
           </ul>
         </li>
       </ul>
@@ -14,18 +14,8 @@
   </div>
 </nav>
 <div class="container-fluid">
-  <div class="video">
-    <!-- <object classid="clsid:67DABFBF-D0AB-41fa-9C46-CC0F21721616" width="1280" height="720" codebase="http://go.divx.com/plugin/DivXBrowserPlugin.cab">
-        <param name="custommode" value="none" />
-        <param name="previewImage" value="" />
-        <param name="autoPlay" value="false" />
-        <param name="src" value="../videos/Defiance/test.mp4" />
-      <embed type="video/divx" ng-src="../videos/Defiance/test.mp4" custommode="none" width="1280" height="720" autoPlay="false" previewImage="" pluginspage="http://go.divx.com/plugin/download/">
-      </embed>
-    </object> -->
-    <video width="1280" height="720" controls>
-      <source ng-src="../videos/Defiance/test.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
+  <div id="screen" class="video">
   </div>
+  <a ng-click="nextVid()" class="btn btn-primary pull-right">Next ></a>
+  <a ng-click="prevVid()" class="btn btn-primary pull-left">< Prev</a>
 </div>
