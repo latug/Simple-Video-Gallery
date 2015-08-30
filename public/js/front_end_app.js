@@ -50,6 +50,10 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
       if(res.data.vids.length > 0){
         videos = res.data.vids;
         drawPlayer(videos, pos);
+        if(videos.length >= 2)
+        {
+          $scope.showNxtPrev = true;
+        }
       }
     }
   });
