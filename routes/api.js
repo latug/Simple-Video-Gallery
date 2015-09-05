@@ -66,7 +66,7 @@ module.exports = function(app)
       var stats = fs.statSync('./videos/' + show + '/' + file);
       if(stats.isFile() && file != 'image.png')
       {
-        vids.push(app.locals.protocall + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + show + '/' + file);
+        vids.push(app.locals.protocall + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + encodeURIComponent(show) + '/' + encodeURIComponent(file));
       }
     });
     res.send({
@@ -88,7 +88,7 @@ module.exports = function(app)
       var stats = fs.statSync('./videos/' + show + '/' + season + '/' + file);
       if(stats.isFile())
       {
-        vids.push(app.locals.protocall + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + show + '/' + season + '/' + file);
+        vids.push(app.locals.protocall + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + encodeURIComponent(show) + '/' + encodeURIComponent(season) + '/' + encodeURIComponent(file));
       }
     });
     res.send({

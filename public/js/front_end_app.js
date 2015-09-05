@@ -48,17 +48,25 @@ vidGal.controller('galleryCtrl', ['$scope', 'api', function($scope, api){
 // Controller for the video page.
 vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope, api, $routeParams){
   var videos = [];
-  var vid = '';
-  var pos = 0;
+  var vlc = document.getElementById('vlc'); // this method must be used because of the VLC javascript API.
+  
   $scope.title = $routeParams.show;
 
   api.listSeasons($routeParams.show).then(function(res){
     if($routeParams.show == res.data.show)
     {
       $scope.seasons = res.data.seasons;
+      
       if(res.data.vids.length > 0){
+        
         videos = res.data.vids;
-        drawPlayer(videos, pos);
+        
+        jQuery.each(videos, function(i, val){
+          vlc.playlist.add(val);
+        });
+        
+        vlc.playlist.playItem(0); // play when playlist is ready
+        
         if(videos.length >= 2)
         {
           $scope.showNxtPrev = true;
@@ -67,48 +75,36 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
     }
   });
 
-  function drawPlayer(videos, pos)
-  {
-    vid = '<object classid="clsid:67DABFBF-D0AB-41fa-9C46-CC0F21721616" width="100%" height="720" codebase="http://go.divx.com/plugin/DivXBrowserPlugin.cab">';
-    vid = vid + '<param name="custommode" value="none" />';
-    vid = vid + '<param name="previewImage" value="" />';
-    vid = vid + '<param name="autoPlay" value="true" />';
-    vid = vid + '<param name="src" value="'+ videos[pos] +'" />';
-    vid = vid + '<embed type="video/divx" src="'+ videos[pos] +'" custommode="none" width="100%" height="720" autoPlay="true" previewImage="" pluginspage="http://go.divx.com/plugin/download/">';
-    vid = vid + '</embed>';
-    vid = vid + '</object>';
-    angular.element('#screen').append(vid);
-  }
-
-  function destroyPlayer()
-  {
-    angular.element('#screen').html('');
-  }
-
   $scope.nextVid = function()
-  {
-    destroyPlayer();
-
-    pos += 1;
-    if(pos > videos.length - 1)
+  {    
+    var currentItem = vlc.playlist.currentItem;
+    var playlistCount = vlc.playlist.items.count;
+    
+    if(currentItem < playlistCount - 1)
     {
-      pos = 0;
+      vlc.playlist.next();
     }
-
-    drawPlayer(videos, pos);
+    else
+    {
+      vlc.playlist.playItem(0);
+    }
+    
   };
 
   $scope.prevVid = function()
-  {
-    destroyPlayer();
-
-    pos -= 1;
-    if(pos < 0)
+  { 
+    var currentItem = vlc.playlist.currentItem;
+    var playlistCount = vlc.playlist.items.count;
+    
+    if(currentItem == 0)
     {
-      pos = videos.length - 1;
+      vlc.playlist.playItem(playlistCount - 1);  
+    } 
+    else
+    {   
+      vlc.playlist.prev();
     }
-
-    drawPlayer(videos, pos);
+    
   };
 
   $scope.selectedSeason = function($event)
@@ -122,21 +118,13 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
         if($routeParams.show == res.data.show && angular.element($event.currentTarget).attr('id') == res.data.season)
         {
             videos = res.data.vids;
-            pos = 0;
+            
+                        
             if(videos.length >= 2)
             {
               $scope.showNxtPrev = true;
             }
-
-            if(angular.element('#screen').html() !== "")
-            {
-              destroyPlayer();
-              drawPlayer(videos, pos);
-            }
-            else
-            {
-              drawPlayer(videos, pos);
-            }
+            
         }
     });
   };
