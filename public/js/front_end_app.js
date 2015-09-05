@@ -72,9 +72,9 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
     vid = '<object classid="clsid:67DABFBF-D0AB-41fa-9C46-CC0F21721616" width="100%" height="720" codebase="http://go.divx.com/plugin/DivXBrowserPlugin.cab">';
     vid = vid + '<param name="custommode" value="none" />';
     vid = vid + '<param name="previewImage" value="" />';
-    vid = vid + '<param name="autoPlay" value="false" />';
+    vid = vid + '<param name="autoPlay" value="true" />';
     vid = vid + '<param name="src" value="'+ videos[pos] +'" />';
-    vid = vid + '<embed type="video/divx" src="'+ videos[pos] +'" custommode="none" width="100%" height="720" autoPlay="false" previewImage="" pluginspage="http://go.divx.com/plugin/download/">';
+    vid = vid + '<embed type="video/divx" src="'+ videos[pos] +'" custommode="none" width="100%" height="720" autoPlay="true" previewImage="" pluginspage="http://go.divx.com/plugin/download/">';
     vid = vid + '</embed>';
     vid = vid + '</object>';
     angular.element('#screen').append(vid);
