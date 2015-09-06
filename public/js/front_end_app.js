@@ -122,7 +122,6 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
   $scope.selectedSeason = function($event)
   {
     var listResult = false;
-    $scope.showVid = true;
     $scope.showSeason = angular.element($event.currentTarget).attr('id');          
             
     api.listEpisodes(
