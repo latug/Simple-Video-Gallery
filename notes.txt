@@ -1,0 +1,14 @@
+1) nodemon while in simple video gallery
+2) cmd into simple video gallery folder
+3) git checkout latughub
+4) git pull
+5) git merge master
+
+
+
+
+video notes
+
+dimensions: 1280x720
+
+menu height: 50px
