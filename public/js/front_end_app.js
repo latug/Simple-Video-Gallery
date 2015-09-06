@@ -61,7 +61,7 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
   
   function whenOpening()
   {
-    if(vlc.subtitle.count >= 2)
+    if(vlc.subtitle.count > 0)
     {
       vlc.subtitle.track = subtitleTrack;
       buildSubtitleMenu();
