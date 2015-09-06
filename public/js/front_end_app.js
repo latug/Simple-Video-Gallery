@@ -106,19 +106,51 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
     }
     
   };
+  
+  function clearList()
+  {
+    var result = false;
+    jQuery.when(vlc.playlist.items.clear()).done(function(){
+      if(vlc.playlist.items.count == 0)
+      {
+        result =  true;
+      }
+    });
+    return result;
+  }
 
   $scope.selectedSeason = function($event)
   {
-    $scope.showSeason = angular.element($event.currentTarget).attr('id');
+    var listResult = false;
+    $scope.showVid = true;
+    $scope.showSeason = angular.element($event.currentTarget).attr('id');          
+            
     api.listEpisodes(
                       $routeParams.show,
                       angular.element($event.currentTarget).attr('id')
                     )
     .then(function(res){
         if($routeParams.show == res.data.show && angular.element($event.currentTarget).attr('id') == res.data.season)
-        {
+        {          
+            if(vlc.playlist.items.count > 0)
+            {
+              listResult = clearList(); //remove old playlist 
+            }
+            else
+            {
+              listResult = true;
+            }       
+            
             videos = res.data.vids;
             
+            if(listResult)
+            {
+              jQuery.each(videos, function(i, val){
+                vlc.playlist.add(val);
+              });
+              
+              vlc.playlist.playItem(0); // play when playlist is ready
+            }
                         
             if(videos.length >= 2)
             {
