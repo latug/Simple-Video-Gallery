@@ -1,15 +1,21 @@
-<nav class="navbar navbar-default container" ng-show="seasons.length > 0">
+<nav class="navbar navbar-default container">
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="title"><a>{{title}} &nbsp; > </a></li>
-        <li class="dropdown">
-          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Seasons <span class="caret"></span></a>
+        <li class="title"><a>{{title}}</a></li>
+        <li class="dropdown"  ng-show="seasons.length > 0">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"> > &nbsp; Seasons <span class="caret"></span></a>
           <ul class="dropdown-menu" role="menu">
             <li ng-repeat="season in seasons"><a style="cursor: pointer;" id="{{season}}" ng-click="selectedSeason($event)">{{season}}</a></li>
           </ul>
         </li>
         <li ng-show="showSeason != undefined">
           <a> > &nbsp; {{showSeason}}</a>
+        </li>
+        <li class="dropdown" ng-show="episodes.length >= 2">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">> &nbsp; Episodes <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li ng-repeat="epi in episodes"><a style="cursor: pointer;" id="{{epi.index}}" ng-click="selectedEpisode($event)">{{epi.title}}</a></li>
+          </ul>
         </li>
       </ul>
     </div>

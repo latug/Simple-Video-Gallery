@@ -51,6 +51,7 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
   var vlc = document.getElementById('vlc'); // this method must be used because of the VLC javascript API.
   
   $scope.title = $routeParams.show;
+  $scope.episodes = [];
 
   api.listSeasons($routeParams.show).then(function(res){
     if($routeParams.show == res.data.show)
@@ -62,7 +63,10 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
         videos = res.data.vids;
         
         jQuery.each(videos, function(i, val){
-          vlc.playlist.add(val);
+          $scope.episodes.push({           
+            index: vlc.playlist.add(val.link),
+            title: val.title
+          });
         });
         
         vlc.playlist.playItem(0); // play when playlist is ready
@@ -145,9 +149,12 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
             if(listResult)
             {
               jQuery.each(videos, function(i, val){
-                vlc.playlist.add(val);
+                $scope.episodes.push({           
+                  index: vlc.playlist.add(val.link),
+                  title: val.title
+                });
               });
-              
+                
               vlc.playlist.playItem(0); // play when playlist is ready
             }
                         
@@ -158,6 +165,11 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
             
         }
     });
+  };
+  
+  $scope.selectedEpisode = function($event)
+  {
+    vlc.playlist.playItem(angular.element($event.currentTarget).attr('id'));
   };
 
 }]);

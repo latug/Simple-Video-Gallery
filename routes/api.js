@@ -62,11 +62,16 @@ module.exports = function(app)
   app.get('/listSeasons/:show', function(req, res){
     show = req.params.show;
     var files = fs.readdirSync('./videos/' + show);
+    var title = '';
     files.forEach(function(file){
       var stats = fs.statSync('./videos/' + show + '/' + file);
       if(stats.isFile() && file != 'image.png')
       {
-        vids.push(app.locals.protocall + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + encodeURIComponent(show) + '/' + encodeURIComponent(file));
+        title = file.substr(0, file.length - 4);
+        vids.push({
+          link: app.locals.protocall + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + encodeURIComponent(show) + '/' + encodeURIComponent(file),
+          title: title
+        });
       }
     });
     res.send({
@@ -83,12 +88,17 @@ module.exports = function(app)
   app.get('/listEpisodes/:show/:season', function(req, res){
     show = req.params.show;
     season = req.params.season;
+    var title = '';
     var files = fs.readdirSync('./videos/' + show + '/' + season);
     files.forEach(function(file){
       var stats = fs.statSync('./videos/' + show + '/' + season + '/' + file);
       if(stats.isFile())
       {
-        vids.push(app.locals.protocall + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + encodeURIComponent(show) + '/' + encodeURIComponent(season) + '/' + encodeURIComponent(file));
+        title = file.substr(0, file.length - 4);
+        vids.push({
+          link: app.locals.protocall + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + encodeURIComponent(show) + '/' + encodeURIComponent(season) + '/' + encodeURIComponent(file),
+          title: title
+        });
       }
     });
     res.send({
