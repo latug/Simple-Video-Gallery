@@ -55,6 +55,7 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
   $scope.title = $routeParams.show;
   $scope.episodes = [];
   $scope.subs = [];
+  $scope.audio = [];
   
   vlc.addEventListener('MediaPlayerPlaying', whenOpening, false);
   
@@ -64,6 +65,12 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
     {
       vlc.subtitle.track = subtitleTrack;
       buildSubtitleMenu();
+    }
+    
+    if(vlc.audio.count > 1)
+    {
+      vlc.audio.track = audioTrack;
+      buildAudioMenu();
     }
     
   }
@@ -97,6 +104,7 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
   {
     var trackCount = vlc.subtitle.count;
     $scope.subs = [];
+    
     for(var i = 0; i < trackCount; i++)
     {
       $scope.subs.push({
@@ -104,12 +112,24 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
         title: i + ' - ' + vlc.subtitle.description(i)
       });
     }  
-    $scope.$apply();  // push new scope to page.    
+    
+    $scope.$apply();  // push new list to page.
   }
   
   function buildAudioMenu()
   {
+    var trackCount = vlc.audio.count;
+    $scope.audio = []; // clear out last list.
     
+    for(var i = 1; i < trackCount; i++)
+    {
+      $scope.audio.push({
+        track: i,
+        title: i + ' - ' + vlc.audio.description(i)
+      });
+    }
+    
+    $scope.$apply(); // push new list to page.
   }
 
   api.listSeasons($routeParams.show).then(function(res){
@@ -208,9 +228,17 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
   $scope.selectedSub = function($event)
   {
     var trackId = angular.element($event.currentTarget).attr('id');
-    subtitleTrack = trackId; // keep track for the next video.
+    subtitleTrack = parseInt(trackId); // keep track for the next video.
     
     vlc.subtitle.track = trackId;
+  }
+  
+  $scope.selectedAudio = function($event)
+  {
+    var trackId = angular.element($event.currentTarget).attr('id');
+    audioTrack = parseInt(trackId); // keep track for the next video.
+    
+    vlc.audio.track = trackId;
   }
 
 }]);
