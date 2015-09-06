@@ -49,9 +49,68 @@ vidGal.controller('galleryCtrl', ['$scope', 'api', function($scope, api){
 vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope, api, $routeParams){
   var videos = [];
   var vlc = document.getElementById('vlc'); // this method must be used because of the VLC javascript API.
+  var subtitleTrack = 0;
+  var audioTrack = 1;
   
   $scope.title = $routeParams.show;
   $scope.episodes = [];
+  $scope.subs = [];
+  
+  vlc.addEventListener('MediaPlayerPlaying', whenOpening, false);
+  
+  function whenOpening()
+  {
+    if(vlc.subtitle.count >= 2)
+    {
+      vlc.subtitle.track = subtitleTrack;
+      buildSubtitleMenu();
+    }
+    
+  }
+  
+  function clearList()
+  {
+    var result = false;
+    jQuery.when(vlc.playlist.items.clear()).done(function(){
+      if(vlc.playlist.items.count == 0)
+      {
+        result =  true;
+        $scope.episodes = [];
+      }
+    });
+    return result;
+  }
+  
+  function createPlayList(videos)
+  {
+    jQuery.each(videos, function(i, val){
+      $scope.episodes.push({           
+        index: vlc.playlist.add(val.link),
+        title: val.title
+      });
+    });
+        
+    vlc.playlist.playItem(0); // play when playlist is ready
+  }
+  
+  function buildSubtitleMenu()
+  {
+    var trackCount = vlc.subtitle.count;
+    $scope.subs = [];
+    for(var i = 0; i < trackCount; i++)
+    {
+      $scope.subs.push({
+        track: i,
+        title: i + ' - ' + vlc.subtitle.description(i)
+      });
+    }  
+    $scope.$apply();  // push new scope to page.    
+  }
+  
+  function buildAudioMenu()
+  {
+    
+  }
 
   api.listSeasons($routeParams.show).then(function(res){
     if($routeParams.show == res.data.show)
@@ -62,14 +121,7 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
         
         videos = res.data.vids;
         
-        jQuery.each(videos, function(i, val){
-          $scope.episodes.push({           
-            index: vlc.playlist.add(val.link),
-            title: val.title
-          });
-        });
-        
-        vlc.playlist.playItem(0); // play when playlist is ready
+        createPlayList(videos);          
         
         if(videos.length >= 2)
         {
@@ -109,19 +161,7 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
       vlc.playlist.prev();
     }
     
-  };
-  
-  function clearList()
-  {
-    var result = false;
-    jQuery.when(vlc.playlist.items.clear()).done(function(){
-      if(vlc.playlist.items.count == 0)
-      {
-        result =  true;
-      }
-    });
-    return result;
-  }
+  };    
 
   $scope.selectedSeason = function($event)
   {
@@ -148,14 +188,7 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
             
             if(listResult)
             {
-              jQuery.each(videos, function(i, val){
-                $scope.episodes.push({           
-                  index: vlc.playlist.add(val.link),
-                  title: val.title
-                });
-              });
-                
-              vlc.playlist.playItem(0); // play when playlist is ready
+              createPlayList(videos);               
             }
                         
             if(videos.length >= 2)
@@ -171,5 +204,13 @@ vidGal.controller('showCtrl', ['$scope', 'api', '$routeParams', function($scope,
   {
     vlc.playlist.playItem(angular.element($event.currentTarget).attr('id'));
   };
+  
+  $scope.selectedSub = function($event)
+  {
+    var trackId = angular.element($event.currentTarget).attr('id');
+    subtitleTrack = trackId; // keep track for the next video.
+    
+    vlc.subtitle.track = trackId;
+  }
 
 }]);

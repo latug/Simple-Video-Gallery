@@ -17,12 +17,18 @@
             <li ng-repeat="epi in episodes"><a style="cursor: pointer;" id="{{epi.index}}" ng-click="selectedEpisode($event)">{{epi.title}}</a></li>
           </ul>
         </li>
+        <li class="dropdown" ng-show="subs.length >= 2">
+          <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">> &nbsp; Subtitles <span class="caret"></span></a>
+          <ul class="dropdown-menu" role="menu">
+            <li ng-repeat="sub in subs"><a style="cursor: pointer;" id="{{sub.track}}" ng-click="selectedSub($event)">{{sub.title}}</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
 </nav>
 <div class="container">
   <div id="screen" class="video">
-    <embed type="application/x-vlc-plugin" name="vlc" autoplay="yes" loop="no" width="100%" height="720" id="vlc"></embed>
+    <embed type="application/x-vlc-plugin" name="vlc" autoplay="no" loop="no" width="100%" height="720" id="vlc"></embed>
   </div>
   <a ng-click="nextVid()" class="btn btn-primary pull-right" ng-show="showNxtPrev">Next ></a>
   <a ng-click="prevVid()" class="btn btn-primary pull-left" ng-show="showNxtPrev">< Prev</a>
