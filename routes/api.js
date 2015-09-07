@@ -14,10 +14,10 @@ module.exports = function(app)
 
   // List out videos based on directory and grab icon.
   app.get('/listGallery', function(req, res){
-    var files = fs.readdirSync('./videos/');
+    var files = fs.readdirSync(app.locals.path + 'videos/');
     var btnText = '';
     files.forEach(function(file){
-        var stats = fs.statSync('./videos/' + file);
+        var stats = fs.statSync(app.locals.path + 'videos/' + file);
           if(stats.isDirectory())
           {
             if(file.length > 30)
@@ -45,9 +45,9 @@ module.exports = function(app)
   //get the title back and go through and get the Seasons. If none are found pass to next handler
   app.get('/listSeasons/:show', function(req, res, next){
     show = req.params.show;
-    var files = fs.readdirSync('./videos/' + show);
+    var files = fs.readdirSync(app.locals.path + 'videos/' + show);
     files.forEach(function(file){
-        var stats =  fs.statSync('./videos/' + show + '/' + file);
+        var stats =  fs.statSync(app.locals.path + 'videos/' + show + '/' + file);
           if(stats.isDirectory())
           {
             seasons.push(file);
@@ -72,15 +72,15 @@ module.exports = function(app)
 
   app.get('/listSeasons/:show', function(req, res){
     show = req.params.show;
-    var files = fs.readdirSync('./videos/' + show);
+    var files = fs.readdirSync(app.locals.path + 'videos/' + show);
     var title = '';
     files.forEach(function(file){
-      var stats = fs.statSync('./videos/' + show + '/' + file);
+      var stats = fs.statSync(app.locals.path + 'videos/' + show + '/' + file);
       if(stats.isFile() && file != 'image.png')
       {
         title = file.substr(0, file.length - 4);
         vids.push({
-          link: app.locals.protocall + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + encodeURIComponent(show) + '/' + encodeURIComponent(file),
+          link: app.locals.protocol + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + encodeURIComponent(show) + '/' + encodeURIComponent(file),
           title: title
         });
       }
@@ -100,14 +100,14 @@ module.exports = function(app)
     show = req.params.show;
     season = req.params.season;
     var title = '';
-    var files = fs.readdirSync('./videos/' + show + '/' + season);
+    var files = fs.readdirSync(app.locals.path + 'videos/' + show + '/' + season);
     files.forEach(function(file){
-      var stats = fs.statSync('./videos/' + show + '/' + season + '/' + file);
+      var stats = fs.statSync(app.locals.path + 'videos/' + show + '/' + season + '/' + file);
       if(stats.isFile())
       {
         title = file.substr(0, file.length - 4);
         vids.push({
-          link: app.locals.protocall + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + encodeURIComponent(show) + '/' + encodeURIComponent(season) + '/' + encodeURIComponent(file),
+          link: app.locals.protocol + '://' + app.locals.host + ':' + app.locals.port + '/videos/' + encodeURIComponent(show) + '/' + encodeURIComponent(season) + '/' + encodeURIComponent(file),
           title: title
         });
       }
