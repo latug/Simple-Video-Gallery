@@ -15,12 +15,23 @@ module.exports = function(app)
   // List out videos based on directory and grab icon.
   app.get('/listGallery', function(req, res){
     var files = fs.readdirSync('./videos/');
+    var btnText = '';
     files.forEach(function(file){
         var stats = fs.statSync('./videos/' + file);
           if(stats.isDirectory())
           {
+            if(file.length > 30)
+            {
+              btnText = file.substr(0, 30) + '...';
+            }
+            else
+            {
+              btnText = file;
+            }
+            
             vidRow = {
-              'title': file
+              'title': file,
+              'btn': btnText
             };
             vidTbl.push(vidRow);
           }

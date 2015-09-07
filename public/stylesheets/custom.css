@@ -1,12 +1,13 @@
 .plugin {
-height: 60px;
-float: right;
-color: #fff;
-line-height: 60px;
-text-align: right;
+	height: 60px;
+	float: right;
+	color: #fff;
+	line-height: 60px;
+	text-align: right;
 }
 
 .name {
-min-width: 280px;
-margin: 5px 0;
+	width: 280px;
+	margin: 5px 0;
+	overflow: hidden;
 }
