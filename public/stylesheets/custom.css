@@ -1,13 +1,47 @@
+body {
+	background: #222 url(/images/crossed_stripes.png);
+}
+.navbar {
+	border-bottom: 2px solid #fff;
+	box-shadow: 0 0 10px #000;
+}
 .plugin {
 	height: 60px;
 	float: right;
 	color: #fff;
 	line-height: 60px;
-	text-align: right;
+	margin-right: 15px;
 }
-
+.plugin:hover {
+	color: #42C921;
+}
 .name {
-	width: 280px;
-	margin: 5px 0;
+	width: 255px;
+	margin: 10px 0;
 	overflow: hidden;
+	font-size: 14px;
+}
+.name:hover {
+	color: #42C921 !important;
+}
+.navbar-default a:hover {
+	color: #42C921 !important;
+}
+.btn-primary:hover {
+	box-shadow: 0 0 8px #42C921;
+	color: #42C921;
+}
+.navbar-brand {
+	margin: 0px;
+	padding: 0px;
+	padding-top: 4px;
+	padding-left: 25px;
+}
+#main-title {
+	width: 100%;
+	text-align: center;
+}
+.dropdown-menu {
+	max-height: 600px;
+	overflow: auto;
 }
